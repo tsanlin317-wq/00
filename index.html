@@ -6,139 +6,102 @@
     <title>သူနာပြုဖြစ်မယ့် ညီမလေးအတွက် လုပ်ငန်းစဉ်</title>
     <style>
         :root { --p-soft: #fff0f6; --p-main: #ff85c0; --p-dark: #eb2f96; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--p-soft); padding: 15px; margin: 0; color: #333; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--p-soft); padding: 15px; margin: 0; color: #333; font-weight: 900; }
         .container { max-width: 450px; margin: auto; }
-        .header { background: white; padding: 20px; border-radius: 20px; text-align: center; border: 2px solid var(--p-main); margin-bottom: 15px; }
-        h2 { color: var(--p-dark); margin: 0; font-size: 20px; }
-        .date-box { font-size: 14px; color: #888; margin-top: 5px; font-weight: bold; }
+        .header { background: white; padding: 20px; border-radius: 20px; text-align: center; border: 2.5px solid var(--p-main); margin-bottom: 15px; }
+        h2 { color: var(--p-dark); margin: 0; font-size: 18px; }
+        .date-box { font-size: 14px; color: #888; margin-top: 5px; }
         .section-title { font-size: 14px; color: white; background: var(--p-main); padding: 5px 15px; border-radius: 20px; display: inline-block; margin: 15px 0 10px; }
-        .task-card { background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .task-card { background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #ffeef6; }
         .task-row { display: flex; align-items: center; gap: 12px; }
-        input[type="checkbox"] { width: 22px; height: 22px; accent-color: var(--p-dark); cursor: pointer; }
-        .task-text { font-size: 16px; font-weight: 500; flex-grow: 1; }
+        input[type="checkbox"] { width: 24px; height: 24px; accent-color: var(--p-dark); cursor: pointer; }
+        .task-text { font-size: 16px; flex-grow: 1; }
         .note-input { width: 100%; border: none; border-bottom: 1px dashed #ddd; padding: 5px 0; font-size: 12px; color: #666; outline: none; margin-top: 8px; background: transparent; }
-        
-        /* အချိန်ပြမယ့် Style */
-        .time-box { display: inline-flex; align-items: center; background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-top: 5px; border: 1px solid #c8e6c9; }
-        
-        /* မှတ်တမ်းပိုင်း Style */
-        .history-section { background: white; padding: 15px; border-radius: 15px; margin-top: 20px; border: 1px solid #ffd6e7; }
-        .history-title { font-size: 14px; color: #d63384; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
-        .history-item { display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid #fdf0f5; color: #555; }
-        .history-date { display: flex; align-items: center; gap: 5px; }
-        .history-status { color: #eb2f96; font-weight: bold; }
-        
-        .footer { text-align: center; font-size: 10px; color: #ccc; margin-top: 20px; padding-bottom: 20px; }
+        .time-box { display: inline-flex; align-items: center; background: #e8f5e9; color: #2e7d32; padding: 4px 10px; border-radius: 8px; font-size: 12px; margin-top: 8px; border: 1px solid #c8e6c9; }
+        .loader { display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 100; justify-content: center; align-items: center; }
+        .footer { text-align: center; font-size: 11px; color: #bbb; margin-top: 30px; padding-bottom: 20px; }
     </style>
 </head>
 <body>
 
+<div id="loading" class="loader">⚙️ စာရင်းစစ်နေသည်...</div>
+
 <div class="container">
     <div class="header">
-        <h2>🩺 သူနာပြုဖြစ်မယ့် ညီမလေးအတွက် လုပ်ငန်းစဉ် 🌸</h2>
-        <div class="date-box">ယနေ့ရက်စွဲ - 04/01/2026</div>
+        <h2>🩺 သူနာပြုဖြစ်မယ့် ညီမလေးအတွက် 🌸</h2>
+        <div class="date-box" id="todayDate"></div>
     </div>
 
     <div class="section-title">🌅 မနက်ပိုင်း (၆:၀၀ အိပ်ရာထ)</div>
-    
     <div class="task-card">
-        <div class="task-row"><input type="checkbox" id="t1" onclick="updateTime('t1','s1')"><span class="task-text">အိပ်ရာသိမ်းခြင်း</span></div>
+        <div class="task-row"><input type="checkbox" id="t1" onchange="syncTask('t1', 'အိပ်ရာသိမ်းခြင်း')"><span class="task-text">အိပ်ရာသိမ်းခြင်း</span></div>
         <div id="s1"></div>
-        <input type="text" class="note-input" placeholder="မှတ်ချက်ရေးရန်...">
+        <input type="text" id="n1" class="note-input" placeholder="မှတ်ချက်ရေးရန်..." onblur="syncTask('t1', 'အိပ်ရာသိမ်းခြင်း')">
     </div>
-
     <div class="task-card">
-        <div class="task-row"><input type="checkbox" id="t2" onclick="updateTime('t2','s2')"><span class="task-text">မျက်နှာသစ်၊ သွားတိုက်</span></div>
+        <div class="task-row"><input type="checkbox" id="t2" onchange="syncTask('t2', 'မျက်နှာသစ်၊ သွားတိုက်')"><span class="task-text">မျက်နှာသစ်၊ သွားတိုက်</span></div>
         <div id="s2"></div>
-        <input type="text" class="note-input" placeholder="မှတ်ချက်ရေးရန်...">
-    </div>
-
-    <div class="task-card">
-        <div class="task-row"><input type="checkbox" id="t3" onclick="updateTime('t3','s3')"><span class="task-text">တံမြက်စည်းလှည်းခြင်း</span></div>
-        <div id="s3"></div>
-        <input type="text" class="note-input" placeholder="မှတ်ချက်ရေးရန်...">
-    </div>
-
-    <div class="task-card">
-        <div class="task-row"><input type="checkbox" id="t4" onclick="updateTime('t4','s4')"><span class="task-text">ရေချိုးခြင်း</span></div>
-        <div id="s4"></div>
-        <input type="text" class="note-input" placeholder="မှတ်ချက်ရေးရန်...">
-    </div>
-
-    <div class="task-card">
-        <div class="task-row"><input type="checkbox" id="t5" onclick="updateTime('t5','s5')"><span class="task-text">ဘုရားပန်းအိုးလဲခြင်း</span></div>
-        <div id="s5"></div>
-        <input type="text" class="note-input" placeholder="မှတ်ချက်ရေးရန်...">
-    </div>
-
-    <div class="task-card">
-        <div class="task-row"><input type="checkbox" id="t6" onclick="updateTime('t6','s6')"><span class="task-text">ထမင်းအိုးတည်ခြင်း</span></div>
-        <div id="s6"></div>
-        <input type="text" class="note-input" placeholder="မှတ်ချက်ရေးရန်...">
+        <input type="text" id="n2" class="note-input" placeholder="မှတ်ချက်ရေးရန်..." onblur="syncTask('t2', 'မျက်နှာသစ်၊ သွားတိုက်')">
     </div>
 
     <div class="section-title">🌇 ညနေပိုင်း (ကျောင်းပြန်ရောက်ချိန်)</div>
-
     <div class="task-card">
-        <div class="task-row"><input type="checkbox" id="t7" onclick="updateTime('t7','s7')"><span class="task-text">ရေချိုးခြင်း</span></div>
-        <div id="s7"></div>
-        <input type="text" class="note-input" placeholder="မှတ်ချက်ရေးရန်...">
+        <div class="task-row"><input type="checkbox" id="t5" onchange="syncTask('t5', 'စာကျက်ခြင်း')"><span class="task-text">စာကျက်ခြင်း</span></div>
+        <div id="s5"></div>
+        <input type="text" id="n5" class="note-input" placeholder="မှတ်ချက်ရေးရန်..." onblur="syncTask('t5', 'စာကျက်ခြင်း')">
     </div>
 
-    <div class="task-card">
-        <div class="task-row"><input type="checkbox" id="t8" onclick="updateTime('t8','s8')"><span class="task-text">ကိုယ်လက်သန့်ရှင်းရေး</span></div>
-        <div id="s8"></div>
-        <input type="text" class="note-input" placeholder="မှတ်ချက်ရေးရန်...">
-    </div>
-
-    <div class="task-card">
-        <div class="task-row"><input type="checkbox" id="t9" onclick="updateTime('t9','s9')"><span class="task-text">စာကျက်ခြင်း</span></div>
-        <div id="s9"></div>
-        <input type="text" class="note-input" placeholder="မှတ်ချက်ရေးရန်...">
-    </div>
-
-    <div class="task-card">
-        <div class="task-row"><input type="checkbox" id="t10" onclick="updateTime('t10','s10')"><span class="task-text">အထတ်ပညာတစ်ခုခုလေ့လာခြင်း</span></div>
-        <div id="s10"></div>
-        <input type="text" class="note-input" placeholder="မှတ်ချက်ရေးရန်...">
-    </div>
-
-    <div class="task-card">
-        <div class="task-row"><input type="checkbox" id="t11" onclick="updateTime('t11','s11')"><span class="task-text">မိသားစုနဲ့အချိန်ပေးခြင်း</span></div>
-        <div id="s11"></div>
-        <input type="text" class="note-input" placeholder="မှတ်ချက်ရေးရန်...">
-    </div>
-
-    <div class="task-card">
-        <div class="task-row"><input type="checkbox" id="t12" onclick="updateTime('t12','s12')"><span class="task-text">ဘုရားရှိခိုးပြီးအိပ်ခြင်း</span></div>
-        <div id="s12"></div>
-        <input type="text" class="note-input" placeholder="မှတ်ချက်ရေးရန်...">
-    </div>
-
-    <div class="history-section">
-        <div class="history-title">📊 ပြီးခဲ့သော ရက်စွဲမှတ်တမ်းများ</div>
-        <div class="history-item">
-            <div class="history-date">📅 03/01/2026</div>
-            <div class="history-status">0/12 ပြီးမြောက်သည်</div>
-        </div>
-    </div>
-
-    <div class="footer">အခြေခံအဆောက်အအုံ နောက်ဆုံးအဆင့်များ</div>
+    <div class="footer">🌸 ညီမလေးအတွက် အချစ်များစွာဖြင့် 🌸</div>
 </div>
 
 <script>
-    function updateTime(checkId, spanId) {
-        const cb = document.getElementById(checkId);
-        const sp = document.getElementById(spanId);
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw5Hu2VjjNGCb5j0ZfCxpsNPpJrHGZGzHt5UX0q1qUwAShm94eOLFhoaXCYJYChXYx59A/exec";
+
+    window.onload = function() {
+        document.getElementById('todayDate').innerText = "ယနေ့ရက်စွဲ - " + new Date().toLocaleDateString();
+        loadCloudData();
+    };
+
+    async function loadCloudData() {
+        document.getElementById('loading').style.display = 'flex';
+        try {
+            const response = await fetch(SCRIPT_URL);
+            const data = await response.json();
+            data.forEach(row => {
+                const cb = document.getElementById(row[1]);
+                const sp = document.getElementById('s' + row[1].substring(1));
+                const note = document.getElementById('n' + row[1].substring(1));
+                if (cb && row[2]) {
+                    cb.checked = true;
+                    sp.innerHTML = `<div class="time-box">✅ ပြီးစီးချိန် - ${row[3]}</div>`;
+                }
+                if (note && row[4]) note.value = row[4];
+            });
+        } catch (e) { console.error("Data loading error"); }
+        document.getElementById('loading').style.display = 'none';
+    }
+
+    async function syncTask(id, name) {
+        const cb = document.getElementById(id);
+        const sp = document.getElementById('s' + id.substring(1));
+        const note = document.getElementById('n' + id.substring(1)).value;
+        let time = "";
+
         if (cb.checked) {
             const now = new Date();
-            const time = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-            sp.innerHTML = `<div class="time-box">✅ ပြီးစီးသည့်အချိန် - ${time}</div>`;
+            time = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
+            sp.innerHTML = `<div class="time-box">⏳ သိမ်းဆည်းနေသည်...</div>`;
         } else {
             sp.innerHTML = "";
         }
+
+        await fetch(SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({ id: id, status: cb.checked, time: time, note: note })
+        });
+        
+        if (cb.checked) sp.innerHTML = `<div class="time-box">✅ ပြီးစီးချိန် - ${time}</div>`;
     }
 </script>
-
 </body>
 </html>
